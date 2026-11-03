@@ -90,7 +90,7 @@ pipeline {
                 stage('Deploy to Kubernetes') {
                     steps {
                         // Safely injects the kubeconfig to execute kubectl commands
-                        withKubeConfig([credentialsId: "${env.KUBECONFIG_CREDENTIAL_ID}"]) {
+                        withKubeConfig([credentialsId: 'my-k8s-config']) {
                             sh "kubectl create namespace myworkspace"
                             sh "kubectl apply -f k8s/configmap.yaml"
                             sh "kubectl apply -f k8s/deployment.yaml"
