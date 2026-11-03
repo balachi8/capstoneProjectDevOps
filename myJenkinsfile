@@ -52,17 +52,17 @@ pipeline {
             }
         }
 
-        stage('Security Checks') {
+       /* stage('Security Checks') {
                     parallel {
                         stage('SonarQube Static Analysis') {
-                            //steps {
-                            //    withSonarQubeEnv('SonarQubeServer') {
-                            //        sh 'mvn sonar:sonar'
-                            //    }
-                           // }
+                            steps {
+                                withSonarQubeEnv('SonarQubeServer') {
+                                    sh 'mvn sonar:sonar'
+                                }
+                            }
                         }
                     }
-        }
+        }*/
 
         stage('Container Build') {
             steps {
