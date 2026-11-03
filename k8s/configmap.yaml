@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: capstone-config
+  namespace: myworkspace
+data:
+  # The filename acts as the key
+  capstone-app.conf: |-
+    version=26.3.0.1
+    mailid=xxxx.xxxx@xxx.com

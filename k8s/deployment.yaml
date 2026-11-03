@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone-project-deployment
+  namespace: myworkspace
+spec:
+  selector:
+    matchLabels:
+      app: capstone-project
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: capstone-project
+    spec:
+      containers:
+      - name: my-capstone-project
+        image: my-capstone-project:2.0.0
+        ports:
+        - containerPort: 9090
+        command: ["sh", "-c", "cat /etc/config/capstone-app.conf && sleep 3600"]
+        volumeMounts:
+          - name: config-volume
+            mountPath: "/etc/config"
+            readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9090
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - /bin/cat
+            - /etc/config/capstone-app.conf
+          initialDelaySeconds: 50
+          periodSeconds: 50
+      volumes:
+        - name: config-volume
+          configMap:
+             name:  capstone-config

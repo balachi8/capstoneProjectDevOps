@@ -10,6 +10,10 @@ pipeline {
         // Adjust these variables based on your repository setup
         REPO_URL = 'https://github.com/balachi8/capstoneProjectDevOps.git'
         BRANCH_NAME = 'main'
+        DOCKER_REGISTRY = 'docker.io'
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
+        IMAGE_NAME = 'balachi8/my-capstone-project'
+        IMAGE_TAG = "2.0.0"
     }
 
     stages {
@@ -23,7 +27,6 @@ pipeline {
         stage('Clean & Compile') {
             steps {
                 echo 'Cleaning workspace and compiling the application...'
-                // If using the Maven Wrapper included in your project, use: sh './mvnw clean compile'
                 sh 'mvn clean compile'
             }
         }
@@ -49,14 +52,53 @@ pipeline {
             }
         }
 
-        stage('Archive Artifacts') {
+        stage('Security Checks') {
+                    parallel {
+                        stage('SonarQube Static Analysis') {
+                            steps {
+                                withSonarQubeEnv('SonarQubeServer') {
+                                    sh 'mvn sonar:sonar'
+                                }
+                            }
+                        }
+                        stage('Dependency & Container Scan (Trivy)') {
+                            steps {
+                                sh 'trivy fs --exit-code 0 --severity HIGH,CRITICAL .'
+                            }
+                        }
+                    }
+        }
+
+        stage('Container Build') {
             steps {
-                echo 'Archiving built artifacts...'
-                // Saves the generated .jar file safely inside Jenkins for future downloads or deployments
-                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+                script {
+                    appImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}")
+                }
             }
         }
-    }
+
+        stage('Push') {
+            steps {
+                script {
+                    docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
+                        appImage.push("${IMAGE_TAG}")
+                        appImage.push("latest")
+                    }
+                }
+            }
+        }
+
+                stage('Deploy to Kubernetes') {
+                    steps {
+                        // Safely injects the kubeconfig to execute kubectl commands
+                        withKubeConfig([credentialsId: "${env.KUBECONFIG_CREDENTIAL_ID}"]) {
+                            sh "kubectl create namespace myworkspace"
+                            sh "kubectl apply -f k8s/configmap.yaml"
+                            sh "kubectl apply -f k8s/deployment.yaml"
+                        }
+                    }
+                }
+            }
 
     post {
         success {
