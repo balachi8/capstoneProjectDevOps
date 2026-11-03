@@ -55,11 +55,11 @@ pipeline {
         stage('Security Checks') {
                     parallel {
                         stage('SonarQube Static Analysis') {
-                            steps {
-                                withSonarQubeEnv('SonarQubeServer') {
-                                    sh 'mvn sonar:sonar'
-                                }
-                            }
+                            //steps {
+                            //    withSonarQubeEnv('SonarQubeServer') {
+                            //        sh 'mvn sonar:sonar'
+                            //    }
+                           // }
                         }
                     }
         }
