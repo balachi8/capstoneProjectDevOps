@@ -1,0 +1,69 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'maven-3.10.0'
+        jdk 'java17'
+    }
+
+    environment {
+        // Adjust these variables based on your repository setup
+        REPO_URL = 'https://github.com/balachi8/capstoneProjectDevOps.git'
+        BRANCH_NAME = 'main'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo 'Cloning code from repository...'
+                git branch: "${BRANCH_NAME}", url: "${REPO_URL}"
+            }
+        }
+
+        stage('Clean & Compile') {
+            steps {
+                echo 'Cleaning workspace and compiling the application...'
+                // If using the Maven Wrapper included in your project, use: sh './mvnw clean compile'
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                echo 'Executing unit tests...'
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    // Automatically parses target/surefire-reports and tracks test results in the Jenkins UI
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package Application') {
+            steps {
+                echo 'Packaging the application into a JAR file...'
+                // Skips tests here since they were run in the previous dedicated stage
+                sh 'mvn package -DskipTests'
+            }
+        }
+
+        stage('Archive Artifacts') {
+            steps {
+                echo 'Archiving built artifacts...'
+                // Saves the generated .jar file safely inside Jenkins for future downloads or deployments
+                archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Please review the console output for troubleshooting.'
+        }
+    }
+}
