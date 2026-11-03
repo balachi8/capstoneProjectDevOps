@@ -14,6 +14,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         IMAGE_NAME = 'balachi8/my-capstone-project'
         IMAGE_TAG = "2.0.0"
+        DOCKER_CONTEXT = 'default' 
     }
 
     stages {
@@ -75,9 +76,11 @@ pipeline {
         stage('Push') {
             steps {
                 script {
-                    docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
-                        appImage.push("${IMAGE_TAG}")
-                        appImage.push("latest")
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        docker.withRegistry('https://docker.io', DOCKER_CREDENTIALS_ID) {
+                            appImage.push("${IMAGE_TAG}")
+                            appImage.push("latest")
+                        }
                     }
                 }
             }
