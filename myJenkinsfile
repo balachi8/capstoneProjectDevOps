@@ -1,3 +1,4 @@
+appImage = ""
 pipeline {
     agent any
 
@@ -14,7 +15,7 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         IMAGE_NAME = 'balachi8/my-capstone-project'
         IMAGE_TAG = "2.0.0"
-        DOCKER_CONTEXT = 'default' 
+        DOCKER_CONTEXT = 'default'
     }
 
     stages {
@@ -68,7 +69,7 @@ pipeline {
         stage('Container Build') {
             steps {
                 script {
-                   def appImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}")
+                   appImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}")
                 }
             }
         }
