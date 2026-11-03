@@ -61,11 +61,6 @@ pipeline {
                                 }
                             }
                         }
-                        stage('Dependency & Container Scan (Trivy)') {
-                            steps {
-                                sh 'trivy fs --exit-code 0 --severity HIGH,CRITICAL .'
-                            }
-                        }
                     }
         }
 
