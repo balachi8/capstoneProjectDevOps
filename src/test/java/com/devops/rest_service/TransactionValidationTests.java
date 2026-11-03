@@ -34,7 +34,7 @@ class TransactionValidationTests {
     @Test
     void whenAllFieldsAreValid_thenNoValidationViolations() {
         // Arrange
-        Transaction txn = new Transaction("00000000", bd1);
+        Transaction txn = new Transaction("f81d4fae-7dec-11d0-a765-00a0c91e6bf6", bd1);
 
         // Act
         Set<ConstraintViolation<Transaction>> violations = validator.validate(txn);
