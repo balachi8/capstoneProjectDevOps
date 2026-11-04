@@ -54,7 +54,7 @@ pipeline {
             }
         }
 
-       /* stage('Security Checks') {
+        stage('SonarQube Analysis') {
                     parallel {
                         stage('SonarQube Static Analysis') {
                             steps {
@@ -64,7 +64,17 @@ pipeline {
                             }
                         }
                     }
-        }*/
+        }
+
+        stage('Quality Gate Evaluation') {
+            steps {
+                // Pause the pipeline up to 1 hour waiting for SonarQube to finish processing
+                timeout(time: 1, unit: 'HOURS') {
+                    // This halts and fails the Jenkins build if the SonarQube Quality Gate fails
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
 
         stage('Container Build') {
             steps {
