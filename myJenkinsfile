@@ -80,6 +80,7 @@ pipeline {
                 steps {
                 // Executes the security scan using the tool configured in Jenkins Tools
                 dependencyCheck additionalArguments: '-scan . -format HTML -out dependency-check-report'dependencyCheck additionalArguments: '-scan . -format HTML -out dependency-check-report'
+                }
             }
 
         stage('Container Build') {
