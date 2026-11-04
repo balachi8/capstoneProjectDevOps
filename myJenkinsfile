@@ -78,9 +78,8 @@ pipeline {
 
         stage('OWASP Dependency Scan') {
                     steps {
-                        // Invokes the dependency-check tool predefined in Global Tool Configuration
-                        dependencyCheckAnalyzer datadir: '', hintsFile: '', includeUnsupportedFiles: false, isAutoupdate: true, outdir: 'owasp-reports', scanpath: '.', skipOnFailure: false
-                    }
+                            step([$class: 'DependencyCheckBuilder', odcInstallation: 'DP'])
+                        }
                 }
 
         stage('Container Build') {
