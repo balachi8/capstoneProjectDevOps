@@ -77,11 +77,22 @@ pipeline {
         }*/
 
         stage('OWASP Dependency Scan') {
-                steps {
-                // Executes the security scan using the tool configured in Jenkins Tools
-                dependencyCheck additionalArguments: '-scan . -format HTML -out dependency-check-report'dependencyCheck additionalArguments: '-scan . -format HTML -out dependency-check-report'
+                    steps {
+                          // 1. Run the analyzer scan
+                                dependencyCheck(
+                                    odcInstallation: 'OWASP-Dependency-Check', // Must match the name in Jenkins Global Tool Configuration
+                                    additionalArguments: '''
+                                        --scan "./" 
+                                        --format "ALL" 
+                                        --disableNodeJS false
+                                        --disableJar false
+                                    '''
+                                )
+                                
+                                // 2. Publish and visualize the results inside Jenkins
+                                dependencyCheckPublisher pattern: 'dependency-check-report.xml'   
+                    }
                 }
-            }
 
         stage('Container Build') {
             steps {
