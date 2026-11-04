@@ -5,7 +5,6 @@ pipeline {
     tools {
         maven 'maven-3.10.0'
         jdk 'java17'
-        dependencyCheck 'Dependency-Check' 
     }
 
     environment {
@@ -99,6 +98,25 @@ pipeline {
             steps {
                 script {
                    appImage = docker.build("${DOCKER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}")
+                }
+            }
+        }
+
+        stage('Scan Image') {
+            steps {
+                script {
+                    echo "Scanning container image with Trivy..."
+                    
+                    // Runs Trivy via Docker container to scan the newly built image
+                    // --exit-code 1 forces the build to fail if CRITICAL vulnerabilities are found
+                    sh """
+                        docker run --rm \
+                        -v /var/run/docker.sock:/var/run/docker.sock \
+                        aquasec/trivy:latest image \
+                        --severity HIGH,CRITICAL \
+                        --exit-code 1 \
+                        ${IMAGE_NAME}
+                    """
                 }
             }
         }
