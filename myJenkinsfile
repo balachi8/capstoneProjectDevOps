@@ -82,8 +82,7 @@ pipeline {
                         dependencyCheckAnalyzer datadir: '', hintsFile: '', includeUnsupportedFiles: false, isAutoupdate: true, outdir: 'owasp-reports', scanpath: '.', skipOnFailure: false
                     }
                 }
-            }
-            
+
         stage('Container Build') {
             steps {
                 script {
