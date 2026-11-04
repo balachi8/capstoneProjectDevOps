@@ -5,6 +5,7 @@ pipeline {
     tools {
         maven 'maven-3.10.0'
         jdk 'java17'
+        dependencyCheck 'Dependency-Check' 
     }
 
     environment {
