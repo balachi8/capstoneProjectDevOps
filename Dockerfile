@@ -14,6 +14,9 @@ COPY --chown=appuser:appgroup src ./src
 # Build the application using Maven
 RUN mvn clean package -DskipTests
 
+# Stage 2: Minimal runtime image
+FROM alpine:latest
+
 # Copy the built JAR file from the previous stage to the container
 COPY --chown=appuser:appgroup target/rest-service-0.0.1-SNAPSHOT.jar /app/rest-service-0.0.1-SNAPSHOT.jar
 
