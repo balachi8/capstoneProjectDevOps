@@ -18,6 +18,7 @@ pipeline {
         DOCKER_CONTEXT = 'default'
         JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-amd64'
         PATH = "${JAVA_HOME}/bin:${PATH}"
+        NVD_API_KEY = credentials('nvd-api-token')
     }
 
     stages {
