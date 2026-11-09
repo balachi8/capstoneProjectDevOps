@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: access-secrets
+  namespace: myworkspace
+subjects:
+- kind: ServiceAccount
+  name: mysvcaccount
+  namespace: myworkspace
+roleRef:
+  kind: Role 
+  name: secret-reader 
+  apiGroup: rbac.authorization.k8s.io
