@@ -1,5 +1,5 @@
 # base image from Docker Hub
-FROM maven:3.8.3-openjdk-17-slim
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS build
 
 #Set user privilege
 RUN groupadd -r appgroup && useradd -r -g appgroup -u 1001 appuser
@@ -15,7 +15,7 @@ COPY --chown=appuser:appgroup src ./src
 RUN mvn clean package -DskipTests
 
 # Stage 2: Minimal runtime image
-FROM alpine:latest
+FROM eclipse-temurin:21-jre-alpine
 
 # Copy the built JAR file from the previous stage to the container
 COPY --chown=appuser:appgroup target/rest-service-0.0.1-SNAPSHOT.jar /app/rest-service-0.0.1-SNAPSHOT.jar
