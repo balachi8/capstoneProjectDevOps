@@ -1,5 +1,5 @@
 # base image from Docker Hub
-FROM maven:3.8.3-openjdk-17
+FROM maven:3.8.3-openjdk-17-slim
 
 #Set user privilege
 RUN groupadd -r appgroup && useradd -r -g appgroup -u 1001 appuser
