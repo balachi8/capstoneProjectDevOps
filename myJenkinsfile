@@ -81,14 +81,14 @@ pipeline {
 
         stage('OWASP Dependency Scan') {
             steps {
-                    // 1. Run the analyzer scan
+
+                script {
                     dependencyCheck(
-                        odcInstallation: 'OWASP-Dependency-Check', 
+                        odcInstallation: 'OWASP-Dependency-Check',
                         additionalArguments: """
-                            --format HTML 
-                            --format XML 
+                            --format HTML
+                            --format XML
                             --nvdApiKey ${NVD_API_KEY}
-                            --scan ./
                         """
                     )
                         // 2. Publish and visualize the results inside Jenkins
