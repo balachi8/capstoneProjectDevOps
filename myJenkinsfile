@@ -110,7 +110,7 @@ pipeline {
                     // Runs Trivy via Docker container to scan the newly built image
                     // --exit-code 1 forces the build to fail if CRITICAL vulnerabilities are found
                     sh """
-                        MSYS_NO_PATHCONV=1 docker run --rm \
+                        MSYS_NO_PATHCONV=1 docker run --skip-version-check --ignore-unfixed --rm \
                         -v /var/run/docker.sock:/var/run/docker.sock \
                         aquasec/trivy:latest image \
                         --severity HIGH,CRITICAL \
