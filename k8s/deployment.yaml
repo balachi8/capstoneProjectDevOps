@@ -18,7 +18,7 @@ spec:
         image: balachi8/my-capstone-project:2.0.0
         ports:
         - containerPort: 9090
-        command: ["sh", "-c", "cat /etc/config/capstone-app.conf && sleep 3600 && cat /etc/secret-volume "]
+        command: ["sh", "-c", "cat /etc/config/capstone-app.conf && sleep 3600 && cat /etc/secrets/dbwalletname "]
         volumeMounts:
           - name: mysecret-volume
             mountPath: "/etc/secrets"
