@@ -16,6 +16,8 @@ pipeline {
         IMAGE_NAME = 'balachi8/my-capstone-project'
         IMAGE_TAG = "2.0.0"
         DOCKER_CONTEXT = 'default'
+        JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-amd64'
+        PATH = "${JAVA_HOME}/bin:${PATH}"
     }
 
     stages {
