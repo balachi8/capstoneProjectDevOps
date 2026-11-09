@@ -76,10 +76,11 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
+        }*/
 
         stage('OWASP Dependency Scan') {
             steps {
+                catchError(message: 'OWASP Dependency Scan but continuing pipeline') {
                     // 1. Run the analyzer scan
                     withCredentials([string(credentialsId: 'nvd-api-token', variable: 'NVD_API_KEY')]) {
                         dependencyCheck(
@@ -93,9 +94,10 @@ pipeline {
                         )
                     }
                         // 2. Publish and visualize the results inside Jenkins
-                        dependencyCheckPublisher pattern: 'dependency-check-report.xml'   
+                        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+                }
             }
-        }*/
+        }
 
         stage('Container Build') {
             steps {
