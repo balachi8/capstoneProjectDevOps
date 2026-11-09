@@ -106,10 +106,8 @@ pipeline {
         }
 
         stage('Scan Image') {
-            catchError {
-                sh 'might fail'
-            }
             steps {
+                catchError(message: 'Image scan failed but continuing pipeline') {
                 script {
                     echo "Scanning container image with Trivy..."
                     
@@ -126,6 +124,7 @@ pipeline {
                         --exit-code 1 \
                         ${IMAGE_NAME}
                     """
+                }
                 }
             }
         }
