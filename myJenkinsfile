@@ -18,7 +18,6 @@ pipeline {
         DOCKER_CONTEXT = 'default'
         JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-amd64'
         PATH = "${JAVA_HOME}/bin:${PATH}"
-        NVD_API_KEY = credentials('nvd-api-token')
     }
 
     stages {
@@ -81,19 +80,20 @@ pipeline {
 
         stage('OWASP Dependency Scan') {
             steps {
-
-                script {
-                    dependencyCheck(
-                        odcInstallation: 'OWASP-Dependency-Check',
-                        additionalArguments: """
-                            --format HTML
-                            --format XML
-                            --nvdApiKey ${NVD_API_KEY}
-                        """
-                    )
-                }    
-                // 2. Publish and visualize the results inside Jenkins
-                dependencyCheckPublisher pattern: 'dependency-check-report.xml'   
+                    // 1. Run the analyzer scan
+                    withCredentials([string(credentialsId: 'nvd-api-token', variable: 'NVD_API_KEY')]) {
+                        dependencyCheck(
+                            odcInstallation: 'OWASP-Dependency-Check', 
+                            additionalArguments: """
+                                --format HTML 
+                                --format XML 
+                                --nvdApiKey ${NVD_API_KEY}
+                                --scan ./
+                            """
+                        )
+                    }
+                        // 2. Publish and visualize the results inside Jenkins
+                        dependencyCheckPublisher pattern: 'dependency-check-report.xml'   
             }
         }
 
