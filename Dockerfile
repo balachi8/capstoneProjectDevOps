@@ -1,5 +1,6 @@
 # base image from Docker Hub
 FROM maven:3.9.9-eclipse-temurin-21-alpine AS build
+RUN apt-get update && apt-get upgrade
 
 #Set user privilege
 RUN groupadd -r appgroup && useradd -r -g appgroup -u 1001 appuser

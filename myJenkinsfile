@@ -119,6 +119,7 @@ pipeline {
                         --severity HIGH,CRITICAL \
                         --ignore-unfixed \
                         --skip-version-check \
+                        --scanners vuln \
                         --exit-code 1 \
                         ${IMAGE_NAME}
                     """
