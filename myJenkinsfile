@@ -79,22 +79,20 @@ pipeline {
         }*/
 
         stage('OWASP Dependency Scan') {
-                    steps {
-                          sh './dependency-check --help'
-                          // 1. Run the analyzer scan
-                                dependencyCheck(
-                                    odcInstallation: 'OWASP-Dependency-Check', // Must match the name in Jenkins Global Tool Configuration
-                                    additionalArguments: '''
-                                        --scan "./" 
-                                        --format "ALL" 
-                                        --disableNodeJS false
-                                        --disableJar false
-                                    '''
-                                )
-                                
-                                // 2. Publish and visualize the results inside Jenkins
-                                dependencyCheckPublisher pattern: 'dependency-check-report.xml'   
-                    }
+            steps {
+                    // 1. Run the analyzer scan
+                    dependencyCheck(
+                        odcInstallation: 'OWASP-Dependency-Check', 
+                        additionalArguments: """
+                            --format HTML 
+                            --format XML 
+                            --nvdApiKey ${NVD_API_KEY}
+                            --scan ./
+                        """
+                    )
+                        // 2. Publish and visualize the results inside Jenkins
+                        dependencyCheckPublisher pattern: 'dependency-check-report.xml'   
+            }
         }
 
         stage('Container Build') {
