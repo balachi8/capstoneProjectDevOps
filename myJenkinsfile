@@ -76,7 +76,7 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }*/
+        }
 
         stage('OWASP Dependency Scan') {
             steps {
@@ -95,7 +95,7 @@ pipeline {
                         // 2. Publish and visualize the results inside Jenkins
                         dependencyCheckPublisher pattern: 'dependency-check-report.xml'   
             }
-        }
+        }*/
 
         stage('Container Build') {
             steps {
