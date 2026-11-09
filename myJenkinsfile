@@ -84,12 +84,12 @@ pipeline {
                     withCredentials([string(credentialsId: 'nvd-api-token', variable: 'NVD_API_KEY')]) {
                         dependencyCheck(
                             odcInstallation: 'OWASP-Dependency-Check', 
-                            additionalArguments: """
+                            additionalArguments: '''
                                 --format HTML 
                                 --format XML 
                                 --nvdApiKey ${NVD_API_KEY}
                                 --scan ./
-                            """
+                            '''
                         )
                     }
                         // 2. Publish and visualize the results inside Jenkins
